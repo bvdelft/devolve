@@ -107,8 +107,6 @@ function iterate() {
 function loadImage(data) {
   var img = document.createElement('img');
   img.src = "gif/" + data['commit'] + ".gif";
-  
-  // img.style.display = 'none'; // don't display preloaded images
   img.setAttribute('class','sshot');
   img.onload = function () {
       loaded++;
