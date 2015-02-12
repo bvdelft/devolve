@@ -21,6 +21,7 @@ img.sshot {
   position: absolute;
   left: 50%;
   opacity: 0;
+  display: none;
 }
 
 #slider {

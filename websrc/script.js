@@ -71,6 +71,9 @@ function hideAll() {
 
 var current;
 function doneLoading() {
+  for (var i = 0; i < sshots.length; i++) {
+    sshots[i].style.display = 'inline';
+  }
   repaint();
   mySlider = new dhtmlXSlider({
         parent:  "sliderObj",
@@ -84,7 +87,7 @@ function doneLoading() {
       hideAll();
       value = value + 1;
       sshots[toLoad-value].style.opacity = 1;
-     showMetaInfo(toLoad-value);
+      showMetaInfo(toLoad-value);
     });
   document.getElementById('slider').style.opacity = '1';
   play();
@@ -93,7 +96,9 @@ function play() {
   current = 0;
   stopAllMove();
   hideAll();
-  iterate();
+  sshots[toLoad-1].style.opacity = 1;
+  showMetaInfo(toLoad-1);
+  setTimeout(function () { iterate(); }, 200);
 }
 function iterate() {
   current++;
@@ -111,7 +116,7 @@ function loadImage(data) {
   img.onload = function () {
       loaded++;
       if (toLoad == loaded) {
-        //doneLoading();
+        doneLoading();
         loader.hide();
         document.getElementById('loading').innerHTML = '';
       } else {
