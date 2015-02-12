@@ -1,4 +1,8 @@
-
+/**
+ * When resizing the window, align screen shots such that they are centered and
+ * not larger than the original image file itself.
+ **/
+window.onresize = repaint;
 function repaint() {
   var w = Math.min(wndsize().width, SETTINGS.imgwidth) - (SETTINGS.marginx * 2);
   var h = Math.min(wndsize().height, SETTINGS.imgheight) - (SETTINGS.marginy * 2);
@@ -8,7 +12,7 @@ function repaint() {
   for (var i = 0; i < imgs.length; i++) {
     imgs[i].style.width = optimalW + 'px';
     imgs[i].style.marginLeft = "-" + (optimalW / 2) + "px";
-    imgs[i].style.top = (SETTINGS.marginx * 2) + 'px';
+    imgs[i].style.top = SETTINGS.marginy + 'px';
   }
 }
 
@@ -34,87 +38,57 @@ function move(from, to, time, cb) {
   allMove.push(out);
 }
 
-window.onresize = repaint;
+
 window.onload = init;
 
+var animation;
 
 var toLoad = 0;
 var loaded = 0;
-var sshots = [];
 var sshotwrap;
-var mySlider;
-var allMove = []; // unused?
-var allData;
 
-function stopAllMove() {
-  for (var i = 0; i < allMove.length; i++) {
-    clearInterval(allMove[i]);
-  }
-  allMove = [];
-}
 
-function showMetaInfo(i) {
-  var el = allData[i];
-  document.getElementById('commit').innerHTML = 
-    "<a href='https://bitbucket.org/bvd/dacodyp/commits/"+el.commit+"' target='_blank'>" + el.commit.substr(0,8) + "</a>";
-  document.getElementById('name').innerHTML = el.author;
-  document.getElementById('message').innerHTML = el.message.replace(/-/g,' ');
-  document.getElementById('date').innerHTML = el.date;
-  document.getElementById('banner').style.opacity = 1;
-}
-
-function hideAll() {
-  for (var i = 0; i < sshots.length; i++) {
-    sshots[i].style.opacity = 0;
-  }
-}
-
-var current;
 function doneLoading() {
-  for (var i = 0; i < sshots.length; i++) {
-    sshots[i].style.display = 'inline';
-  }
+  
   repaint();
-  mySlider = new dhtmlXSlider({
+  
+  var mySlider = new dhtmlXSlider({
         parent:  "sliderObj",
         step:  1,
         min:  0,
         max:  toLoad-1,
         value:  toLoad-1
     });
+  
   mySlider.attachEvent("onChange", function(value){
-      stopAllMove();
-      hideAll();
-      value = value + 1;
-      sshots[toLoad-value].style.opacity = 1;
-      showMetaInfo(toLoad-value);
+      animation.jumpTo(value);
     });
+  
+  animation = new Animation(shotCollection, mySlider,
+    new MetaController(shotCollection,
+      document.getElementById('commit'),
+      document.getElementById('name'),
+      document.getElementById('message'),
+      document.getElementById('date'),
+      document.getElementById('banner')) );
+  
   document.getElementById('slider').style.opacity = '1';
+  
   play();
 }
 function play() {
-  current = 0;
-  stopAllMove();
-  hideAll();
-  sshots[toLoad-1].style.opacity = 1;
-  showMetaInfo(toLoad-1);
-  setTimeout(function () { iterate(); }, SETTINGS.playSpeed);
-}
-function iterate() {
-  current++;
-  if (current < toLoad) {
-    move(sshots[toLoad-current], sshots[toLoad-current-1], SETTINGS.playSpeed, iterate);
-    mySlider.setValue(current);
-    showMetaInfo(toLoad-current-1);
-  }
+  animation.animate(SETTINGS.playSpeed);
 }
 
 function loadImage(data) {
   var img = document.createElement('img');
   img.src = SETTINGS.path + data['commit'] + ".gif";
   img.setAttribute('class','sshot');
+  var meta = data;
   img.onload = function () {
       loaded++;
+      img.style.display = 'inline';
+      shotCollection.addShot(meta, img);
       if (toLoad == loaded) {
         doneLoading();
         loader.hide();
@@ -127,21 +101,22 @@ function loadImage(data) {
   return img;
 }
 
-
 function getMetaData() {
   readJSONFile("metainfo.json", function (commitInfo) {
-      allData = commitInfo;
-      toLoad = allData.length;
+      toLoad = commitInfo.length;
       loader.setMax(toLoad);
       for (var i = 0; i < toLoad; i++) {
         // Can be detached to different thread earlier?
-        sshots.push(loadImage(allData[i]));
-      }      
+        loadImage(commitInfo[i]);
+      }
     });
 }
+
+var shotCollection;
 
 function init() {
   loader = new Loader(document.getElementById('loading'));
   sshotwrap = document.getElementById('sshotwrap');
   getMetaData();
+  shotCollection = new ShotCollection();
 }

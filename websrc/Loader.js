@@ -1,4 +1,4 @@
-Loader = function(div) {
+var Loader = function(div) {
     this.div = div;
     this.setMax = function (max) {
         this.max = max;
