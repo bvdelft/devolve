@@ -111,7 +111,7 @@ function loadImage(data) {
   img.onload = function () {
       loaded++;
       if (toLoad == loaded) {
-        doneLoading();
+        //doneLoading();
         loader.hide();
         document.getElementById('loading').innerHTML = '';
       } else {
