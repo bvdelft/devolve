@@ -98,12 +98,12 @@ function play() {
   hideAll();
   sshots[toLoad-1].style.opacity = 1;
   showMetaInfo(toLoad-1);
-  setTimeout(function () { iterate(); }, 200);
+  setTimeout(function () { iterate(); }, SETTINGS.playSpeed);
 }
 function iterate() {
   current++;
   if (current < toLoad) {
-    move(sshots[toLoad-current], sshots[toLoad-current-1], 200, iterate);
+    move(sshots[toLoad-current], sshots[toLoad-current-1], SETTINGS.playSpeed, iterate);
     mySlider.setValue(current);
     showMetaInfo(toLoad-current-1);
   }
@@ -111,7 +111,7 @@ function iterate() {
 
 function loadImage(data) {
   var img = document.createElement('img');
-  img.src = "gif/" + data['commit'] + ".gif";
+  img.src = SETTINGS.path + data['commit'] + ".gif";
   img.setAttribute('class','sshot');
   img.onload = function () {
       loaded++;
