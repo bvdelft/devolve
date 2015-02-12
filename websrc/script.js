@@ -134,10 +134,10 @@ function loadImage(data) {
       loaded++;
       if (toLoad == loaded) {
         doneLoading();
+        loader.hide();
         document.getElementById('loading').innerHTML = '';
       } else {
-        var p = Math.floor(100*loaded/toLoad);
-        document.getElementById('loading').innerHTML = p + '% loaded';
+        loader.setProgress(loaded);
       }
   }
   sshotwrap.insertBefore(img, sshotwrap.firstChild);
@@ -157,6 +157,7 @@ function getMetaData() {
                 var allText = rawFile.responseText;
                 allData = JSON.parse(allText);
                 toLoad = allData.length;
+                loader.setMax(toLoad);
                 for (var i = 0; i < toLoad; i++) {
                   sshots.push(loadImage(allData[i]));
                 }
@@ -167,6 +168,7 @@ function getMetaData() {
 }
 
 function init() {
+  loader = new Loader(document.getElementById('loading'));
   sshotwrap = document.getElementById('sshotwrap');
   getMetaData();
 }

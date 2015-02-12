@@ -3,6 +3,20 @@
   margin: 0px;
 }
 
+div#loading {
+  width: 200px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background: #ccccff;
+  line-height: 40px;
+  text-align: center;
+  font-family: verdana;
+}
+
 div#screenshot {
   width: 100%;
   text-align: center;
