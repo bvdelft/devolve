@@ -1,18 +1,3 @@
-function wndsize() {
-  var w = 0; var h = 0;
-  //IE
-  if(!window.innerWidth){
-      if(!(document.documentElement.clientWidth == 0)) { //strict mode
-          w = document.documentElement.clientWidth;h = document.documentElement.clientHeight;
-      } else{ //quirks mode
-          w = document.body.clientWidth;h = document.body.clientHeight;
-      }
-  } else {// w3c
-      w = window.innerWidth;
-      h = window.innerHeight;
-  }
-  return {width:w,height:h};
-}
 
 function repaint() {
   var w = Math.min(wndsize().width, SETTINGS.imgwidth) - (SETTINGS.marginx * 2);
@@ -50,7 +35,6 @@ function move(from, to, time, cb) {
 }
 
 window.onresize = repaint;
-
 window.onload = init;
 
 
@@ -142,25 +126,15 @@ function loadImage(data) {
 
 
 function getMetaData() {
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", "metainfo.json");
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                allData = JSON.parse(allText);
-                toLoad = allData.length;
-                loader.setMax(toLoad);
-                for (var i = 0; i < toLoad; i++) {
-                  sshots.push(loadImage(allData[i]));
-                }
-            }
-        }
-    }
-    rawFile.send(null);
+  readJSONFile("metainfo.json", function (commitInfo) {
+      allData = commitInfo;
+      toLoad = allData.length;
+      loader.setMax(toLoad);
+      for (var i = 0; i < toLoad; i++) {
+        // Can be detached to different thread earlier?
+        sshots.push(loadImage(allData[i]));
+      }      
+    });
 }
 
 function init() {
