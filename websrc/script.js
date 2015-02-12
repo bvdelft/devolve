@@ -147,7 +147,7 @@ function loadImage(data) {
 
 function getMetaData() {
     var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", "metainfo.json", false);
+    rawFile.open("GET", "metainfo.json");
     rawFile.onreadystatechange = function ()
     {
         if(rawFile.readyState === 4)
