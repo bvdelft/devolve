@@ -14,20 +14,16 @@ function wndsize() {
   return {width:w,height:h};
 }
 
-var IMGWIDTH = 1071;
-var IMGHEIGHT = 758;
-var MARGIN = 20;
-
 function repaint() {
-  var w = Math.min(wndsize().width, IMGWIDTH) - (MARGIN * 2);
-  var h = Math.min(wndsize().height, IMGHEIGHT) - (MARGIN * 4);
-  var wByH = IMGWIDTH * (h / IMGHEIGHT);
+  var w = Math.min(wndsize().width, SETTINGS.imgwidth) - (SETTINGS.marginx * 2);
+  var h = Math.min(wndsize().height, SETTINGS.imgheight) - (SETTINGS.marginy * 2);
+  var wByH = SETTINGS.imgwidth * (h / SETTINGS.imgheight);
   var optimalW = Math.min(w, wByH);
   var imgs = document.getElementsByClassName("sshot");
   for (var i = 0; i < imgs.length; i++) {
     imgs[i].style.width = optimalW + 'px';
     imgs[i].style.marginLeft = "-" + (optimalW / 2) + "px";
-    imgs[i].style.top = (MARGIN* 2) + 'px';
+    imgs[i].style.top = (SETTINGS.marginx * 2) + 'px';
   }
 }
 
