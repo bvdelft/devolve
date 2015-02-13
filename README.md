@@ -24,7 +24,6 @@ Next, run `./devolve.sh`. Afterwards, a project folder is created containing
 
 # Known Bugs
 
-  - Web page animation does not load screen shots in right order
   - Web page very slow under Opera. Possible fix (which might be good anyway) include:
     - making not shown screen shots truly hidden, rather than see-through
     - have a thread pool of requests for screen shots, having e.g. max 10 requests open at a time
