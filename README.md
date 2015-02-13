@@ -19,7 +19,6 @@ Configure the settings in `devolve.sh`. The hardest part is getting the screen s
 
 Next, run `./devolve.sh`. Afterwards, a project folder is created containing
   - all generated screen shots
-  - a 'video' of the screen shots, showing the document evolution (not implemented yet)
   - a web page as an interactive interface to this 'video'
 
 # Known Bugs
