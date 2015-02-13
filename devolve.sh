@@ -141,6 +141,7 @@ git checkout $branch
 #
 cd $devolvedir
 cp websrc/* $proj
+rm -rf $proj/tmp
 
 #
 # User feedback.
