@@ -16,37 +16,10 @@ function repaint() {
   }
 }
 
-function move(from, to, time, cb) {
-  var start = new Date;
-  var duration = time;
-  var fromEl = from;
-  var toEl = to;
-  var out = setInterval(function() {
-      var timePassed = new Date - start;
-      var progress = timePassed / duration;
-      if (progress > 1) {
-          progress = 1;
-      }
-      toEl.style.opacity = progress;
-      if (progress == 1) {
-        fromEl.style.opacity = 0;
-        clearInterval(out);
-        allMove.splice(allMove.indexOf(out), 1);
-        cb();
-      }
-    }, 10);
-  allMove.push(out);
-}
-
-
-window.onload = init;
-
 var animation;
-
 var toLoad = 0;
 var loaded = 0;
 var sshotwrap;
-
 
 function doneLoading() {
   
@@ -76,6 +49,7 @@ function doneLoading() {
   
   play();
 }
+
 function play() {
   animation.animate(SETTINGS.playSpeed);
 }
@@ -115,6 +89,7 @@ function getMetaData() {
 
 var shotCollection;
 
+window.onload = init;
 function init() {
   loader = new Loader(document.getElementById('loading'));
   sshotwrap = document.getElementById('sshotwrap');
