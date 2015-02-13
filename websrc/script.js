@@ -103,6 +103,7 @@ function loadImage(data) {
 
 function getMetaData() {
   readJSONFile("metainfo.json", function (commitInfo) {
+      shotCollection = new ShotCollection(commitInfo);
       toLoad = commitInfo.length;
       loader.setMax(toLoad);
       for (var i = 0; i < toLoad; i++) {
@@ -118,5 +119,4 @@ function init() {
   loader = new Loader(document.getElementById('loading'));
   sshotwrap = document.getElementById('sshotwrap');
   getMetaData();
-  shotCollection = new ShotCollection();
 }

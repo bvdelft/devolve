@@ -1,8 +1,11 @@
-var ShotCollection = function () {
+var ShotCollection = function (commitInfo) {
     this.shots = [];
+    this.commitInfo = commitInfo;
     
     this.addShot = function (meta, img) {
-        this.shots.push( { meta : meta, img : img } );
+        for (var i = 0; i < this.commitInfo.length; i++)
+          if (this.commitInfo[i].commit == meta.commit)
+            this.shots[i] = { meta : meta, img : img };
       };
     
     this.size = function () {
