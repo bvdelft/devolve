@@ -4,12 +4,14 @@
 
 #
 # Easy settings:
-#  - repo   : path to repository
+#  - proj   : project name (result will be plaed in folder with that name)
+#  - repo   : absolute path to repository
 #  - branch : branch to create document visualisation of
-#  - build  : build command
+#  - build  : build command (run in repo path)
 #  - pdf    : name of generated pdf, without extension
 #
-repo="/scratch/ddyp/csf2015"
+proj="project"
+repo="/absolute/path/to/repo/folder"
 branch="master"
 build="make"
 pdf="main"
@@ -39,9 +41,8 @@ onlyone="false"
 #
 # Set up directories
 #
-mkdir -p tmp
-mkdir -p gifs
-mkdir -p website
+mkdir -p $proj/tmp
+mkdir -p $proj/gif
 devolvedir=`pwd`
 
 #
@@ -63,18 +64,18 @@ git checkout $branch
 git log --date=local \
   --pretty=format:'{%n "commit": "%H",%n "author": "%an",%n "email": "%ae",%n "date": "%ad",%n "message": "%f"%n},' $@ | \
   perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
-  perl -pe 's/},]/}]/' > $devolvedir/website/metainfo.json
+  perl -pe 's/},]/}]/' > $devolvedir/$proj/metainfo.json
 
 #
 # History of all commit hashes.
 #
-git log --pretty=format:'%H' > $devolvedir/tmp/allcommits
+git log --pretty=format:'%H' > $devolvedir/$proj/tmp/allcommits
 
 #
 # Function combining individual pictures from convert pdf.
 #
 function combine {
-  cd $devolvedir/tmp/
+  cd $devolvedir/$proj/tmp/
 	# Generating call combining groups of /ncols/ pages into rows.
   for r in $(seq 0 $(($nrows-1))); do 
 		cmd="convert "
@@ -99,7 +100,7 @@ function combine {
 #
 # Some user feedback.
 #
-ncommits=`grep -c '' $devolvedir/tmp/allcommits`
+ncommits=`grep -c '' $devolvedir/$proj/tmp/allcommits`
 n=0
 echo "Going through $ncommits commits (in reversed order)"
 
@@ -116,18 +117,18 @@ while read comhash; do
 	{ `$build` 
   } 2> /dev/null > /dev/null
 	# Convert pdf to png-s
-  convert $pdf.pdf $devolvedir/tmp/pdf.png
+  convert $pdf.pdf $devolvedir/$proj/tmp/pdf.png
 	# Combine png-s into single png
 	combine
 	# Convert png to resized, lower res gif.
-  convert $devolvedir/tmp/all.png -resize 30% -flatten -type Grayscale -depth 3 -extent $dimensions $devolvedir/gifs/$comhash.gif
+  convert $devolvedir/$proj/tmp/all.png -resize 30% -flatten -type Grayscale -depth 3 -extent $dimensions $devolvedir/$proj/gif/$comhash.gif
 	# Remove temp files.
-  rm $devolvedir/tmp/*.png
+  rm $devolvedir/$proj/tmp/*.png
 	if [ $onlyone = "true" ];
 	then
 	  break
 	fi
-done < $devolvedir/tmp/allcommits
+done < $devolvedir/$proj/tmp/allcommits
 
 #
 # Reset repository.
@@ -136,6 +137,12 @@ cd $repo
 git checkout $branch
 
 #
+# Copy web interface
+#
+cd $devolvedir
+cp websrc/* $proj
+
+#
 # User feedback.
 #
-echo "Done! Generated pictures can be found in gifs/ folder."
+echo "Done! Generated visualisation in $proj folder."
