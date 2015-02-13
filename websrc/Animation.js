@@ -2,13 +2,13 @@ var Animation = function (shotCol, slider, meta) {
     this.shotCol = shotCol;
     this.slider = slider;
     this.meta = meta;
-    
+    this.current = 0;
+   
+    /* Start animation from current frame. */ 
     this.animate = function (duration, callback) {
         this.halt();
         this.hideAll();
-        // commits are stored reversed.
-        this.current = 0;
-        this.next = 1;
+        this.next = this.current + 1;
         this.target = this.shotCol.size() - 1;
         this.start = new Date;
         this.callback = callback;
@@ -46,8 +46,8 @@ var Animation = function (shotCol, slider, meta) {
     this.halt = function () {
         if (typeof this.interval == "undefined")
           return;
-        this.shotCol.getImg(this.next).style.opacity = 1;
-        this.shotCol.getImg(this.current).style.opacity = 0;
+        this.shotCol.getImg(this.next).style.opacity = 0;
+        this.shotCol.getImg(this.current).style.opacity = 1;
         clearInterval(this.interval);
       };
     
@@ -63,6 +63,7 @@ var Animation = function (shotCol, slider, meta) {
         this.shotCol.getImg(frame).style.opacity = 1;
         this.slider.setValue(frame);
         this.meta.showInfo(frame);
+        this.current = frame;
       };
     
   };
