@@ -11,7 +11,11 @@ This little script does the following:
   - create a screen shot of it
   - group all screen shots in an interactive web page as a 'video' of how the document evolved
 
-Demo pages coming up...
+
+# Screen shots
+
+![Screen shot 1](https://raw.githubusercontent.com/bvdelft/devolve/screenshots/shot1.png)
+![Screen shot 2](https://raw.githubusercontent.com/bvdelft/devolve/screenshots/shot2.png)
 
 # Instructions
 
